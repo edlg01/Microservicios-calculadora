@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculadora con Microservicios</title>
+</head>
+<body>
+    <h1>Calculadora con Microservicios</h1>
+    <form id="calcForm">
+        <label>Operación:
+            <select name="op" id="op">
+                <option value="suma">Suma</option>
+                <option value="resta">Resta</option>
+                <option value="multi">Multiplicación</option>
+                <option value="div">División</option>
+            </select>
+        </label><br><br>
+        <label>Valor A: <input type="number" id="a" required></label><br><br>
+        <label>Valor B: <input type="number" id="b" required></label><br><br>
+        <button type="submit">Calcular</button>
+    </form>
+
+    <h2>Resultado:</h2>
+    <pre id="resultado"></pre>
+
+    <script>
+        document.getElementById("calcForm").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const op = document.getElementById("op").value;
+            const a = parseFloat(document.getElementById("a").value);
+            const b = parseFloat(document.getElementById("b").value);
+
+            const response = await fetch("http://localhost:8080/calc", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ op, a, b })
+            });
+
+            const data = await response.json();
+            document.getElementById("resultado").textContent = JSON.stringify(data, null, 2);
+        });
+    </script>
+</body>
+</html>
